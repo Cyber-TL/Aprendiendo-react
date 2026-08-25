@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Producto from "./components/Producto";
 import "./App.css";
 
@@ -15,12 +16,36 @@ const productos = [
   { id: 5, nombre: "Sombra de ojos", descripcion: "Paleta de tonos neutros", precio: 22000, categoria: "Maquillaje", imagen: sombra },
 ];
 
+const categorias = ["Todos", ...new Set(productos.map((p) => p.categoria))];
+
 function App() {
+  const [categoriaActiva, setCategoriaActiva] = useState("Todos");
+
+  const productosFiltrados =
+    categoriaActiva === "Todos"
+      ? productos
+      : productos.filter((p) => p.categoria === categoriaActiva);
+
   return (
     <main className="app">
-      <h1>Catálogo Sena</h1>
+      <div className="titulo-wrapper">
+        <h1>Catálogo Sena</h1>
+      </div>
+
+      <div className="filtros">
+        {categorias.map((cat) => (
+          <button
+            key={cat}
+            className={`filtro-btn ${categoriaActiva === cat ? "activo" : ""}`}
+            onClick={() => setCategoriaActiva(cat)}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+
       <section className="catalogo">
-        {productos.map((producto) => (
+        {productosFiltrados.map((producto) => (
           <Producto
             key={producto.id}
             nombre={producto.nombre}
