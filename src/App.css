@@ -12,6 +12,7 @@ body {
   max-width: 1100px;
   margin: 0 auto;
   padding: 40px 20px;
+  width: 100%;
 }
 
 .app h1 {
@@ -69,4 +70,13 @@ body {
   object-fit: cover;
   border-radius: 12px;
   margin-bottom: 12px;
+}
+.categoria {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: #6c5ce7;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
 }
