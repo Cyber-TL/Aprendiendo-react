@@ -41,12 +41,14 @@ function FormularioProducto({ onAgregar }) {
     };
 
     return (
-        <form onSubmit={manejarEnvio}>
+        <form className="formulario" onSubmit={manejarEnvio}>
             <h2>Agregar producto</h2>
-            <input type="text" name="nombre" placeholder="Nombre" value={formulario.nombre} onChange={manejarCambio} />
-            <input type="text" name="categoria" placeholder="Categoría" value={formulario.categoria} onChange={manejarCambio} />
-            <input type="number" name="precio" placeholder="Precio" value={formulario.precio} onChange={manejarCambio} />
-            <input type="number" name="stock" placeholder="Stock" value={formulario.stock} onChange={manejarCambio} />
+            <div className="formulario-grid">
+                <input type="text" name="nombre" placeholder="Nombre" value={formulario.nombre} onChange={manejarCambio} />
+                <input type="text" name="categoria" placeholder="Categoría" value={formulario.categoria} onChange={manejarCambio} />
+                <input type="number" name="precio" placeholder="Precio" value={formulario.precio} onChange={manejarCambio} />
+                <input type="number" name="stock" placeholder="Stock" value={formulario.stock} onChange={manejarCambio} />
+            </div>
             <button type="submit">Agregar producto</button>
         </form>
     );

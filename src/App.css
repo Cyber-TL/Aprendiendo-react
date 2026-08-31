@@ -71,6 +71,7 @@ body {
   border-radius: 12px;
   margin-bottom: 12px;
 }
+
 .categoria {
   display: inline-block;
   font-size: 0.75rem;
@@ -120,4 +121,119 @@ body {
 .filtro-btn.activo {
   background: #6c5ce7;
   color: white;
+}
+
+/* === Formulario === */
+.formulario {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 32px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.formulario h2 {
+  margin: 0 0 16px;
+  color: #1a1a2e;
+  font-size: 1.2rem;
+}
+
+.formulario-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.formulario input {
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  transition: border-color 0.2s ease;
+}
+
+.formulario input:focus {
+  outline: none;
+  border-color: #6c5ce7;
+}
+
+.formulario button {
+  border: none;
+  background: #6c5ce7;
+  color: white;
+  padding: 10px 24px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.formulario button:hover {
+  background: #5a4bd1;
+}
+
+/* === Tablero de indicadores === */
+.tablero {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.tablero p {
+  background: white;
+  border-radius: 14px;
+  padding: 16px;
+  margin: 0;
+  text-align: center;
+  font-weight: 600;
+  color: #1a1a2e;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* === Stock y acciones dentro de cada producto === */
+.producto .stock-controles {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.producto .stock-controles button {
+  border: none;
+  background: #f0edfe;
+  color: #6c5ce7;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.producto .stock-controles button:hover {
+  background: #6c5ce7;
+  color: white;
+}
+
+.producto .btn-eliminar {
+  border: none;
+  background: #ff6b6b;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.2s ease;
+}
+
+.producto .btn-eliminar:hover {
+  background: #e05555;
 }
