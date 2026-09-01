@@ -272,3 +272,42 @@ body {
 .btn-editar:hover {
   background: #ffc233;
 }
+
+.controles-consulta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.controles-consulta .busqueda {
+  flex: 1;
+  min-width: 200px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  font-family: inherit;
+}
+
+.controles-consulta .busqueda:focus {
+  outline: none;
+  border-color: #6c5ce7;
+}
+
+.controles-consulta select {
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  background: white;
+  cursor: pointer;
+}
+
+.sin-resultados {
+  text-align: center;
+  color: #666;
+  font-size: 1rem;
+  padding: 40px 0;
+}

@@ -27,6 +27,9 @@ function App() {
   const [categoriaActiva, setCategoriaActiva] = useState("Todos");
   const [productoEditando, setProductoEditando] = useState(null);
   const [mensaje, setMensaje] = useState("");
+  const [busqueda, setBusqueda] = useState("");
+  const [filtroEstado, setFiltroEstado] = useState("Todos");
+  const [orden, setOrden] = useState("");
 
   useEffect(() => {
     localStorage.setItem("productos", JSON.stringify(productos));
@@ -40,11 +43,6 @@ function App() {
   }, [mensaje]);
 
   const categorias = ["Todos", ...new Set(productos.map((p) => p.categoria))];
-
-  const productosFiltrados =
-    categoriaActiva === "Todos"
-      ? productos
-      : productos.filter((p) => p.categoria === categoriaActiva);
 
   const agregarProducto = (nuevoProducto) => {
     setProductos([...productos, nuevoProducto]);
@@ -86,6 +84,40 @@ function App() {
     0
   );
 
+  // 1. Filtrar por categoría
+  let productosFiltrados =
+    categoriaActiva === "Todos"
+      ? productos
+      : productos.filter((p) => p.categoria === categoriaActiva);
+
+  // 2. Filtrar por estado (disponible/agotado)
+  if (filtroEstado === "Disponibles") {
+    productosFiltrados = productosFiltrados.filter((p) => p.stock > 0);
+  } else if (filtroEstado === "Agotados") {
+    productosFiltrados = productosFiltrados.filter((p) => p.stock === 0);
+  }
+
+  // 3. Buscar por nombre
+  if (busqueda.trim() !== "") {
+    productosFiltrados = productosFiltrados.filter((p) =>
+      p.nombre.toLowerCase().includes(busqueda.toLowerCase())
+    );
+  }
+
+  // 4. Ordenar (sin mutar el estado original)
+  const productosOrdenados = [...productosFiltrados];
+  if (orden === "nombre-asc") {
+    productosOrdenados.sort((a, b) => a.nombre.localeCompare(b.nombre));
+  } else if (orden === "precio-asc") {
+    productosOrdenados.sort((a, b) => a.precio - b.precio);
+  } else if (orden === "precio-desc") {
+    productosOrdenados.sort((a, b) => b.precio - a.precio);
+  } else if (orden === "stock-asc") {
+    productosOrdenados.sort((a, b) => a.stock - b.stock);
+  } else if (orden === "stock-desc") {
+    productosOrdenados.sort((a, b) => b.stock - a.stock);
+  }
+
   return (
     <main className="app">
       <div className="titulo-wrapper">
@@ -106,6 +138,31 @@ function App() {
         <p>Valor total del inventario: ${valorInventario}</p>
       </div>
 
+      <div className="controles-consulta">
+        <input
+          type="text"
+          className="busqueda"
+          placeholder="Buscar por nombre..."
+          value={busqueda}
+          onChange={(e) => setBusqueda(e.target.value)}
+        />
+
+        <select value={filtroEstado} onChange={(e) => setFiltroEstado(e.target.value)}>
+          <option value="Todos">Todos</option>
+          <option value="Disponibles">Disponibles</option>
+          <option value="Agotados">Agotados</option>
+        </select>
+
+        <select value={orden} onChange={(e) => setOrden(e.target.value)}>
+          <option value="">Ordenar por...</option>
+          <option value="nombre-asc">Nombre A-Z</option>
+          <option value="precio-asc">Precio menor a mayor</option>
+          <option value="precio-desc">Precio mayor a menor</option>
+          <option value="stock-asc">Stock menor a mayor</option>
+          <option value="stock-desc">Stock mayor a menor</option>
+        </select>
+      </div>
+
       <div className="filtros">
         {categorias.map((cat) => (
           <button
@@ -118,22 +175,26 @@ function App() {
         ))}
       </div>
 
-      <section className="catalogo">
-        {productosFiltrados.map((producto) => (
-          <Producto
-            key={producto.id}
-            producto={producto}
-            nombre={producto.nombre}
-            descripcion={producto.descripcion}
-            precio={producto.precio}
-            categoria={producto.categoria}
-            imagen={producto.imagen}
-            onEliminar={eliminarProducto}
-            onModificarStock={modificarStock}
-            onEditar={editarProducto}
-          />
-        ))}
-      </section>
+      {productosOrdenados.length === 0 ? (
+        <p className="sin-resultados">No se encontraron productos.</p>
+      ) : (
+        <section className="catalogo">
+          {productosOrdenados.map((producto) => (
+            <Producto
+              key={producto.id}
+              producto={producto}
+              nombre={producto.nombre}
+              descripcion={producto.descripcion}
+              precio={producto.precio}
+              categoria={producto.categoria}
+              imagen={producto.imagen}
+              onEliminar={eliminarProducto}
+              onModificarStock={modificarStock}
+              onEditar={editarProducto}
+            />
+          ))}
+        </section>
+      )}
     </main>
   );
 }
