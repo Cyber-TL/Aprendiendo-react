@@ -25,10 +25,19 @@ function cargarProductosIniciales() {
 function App() {
   const [productos, setProductos] = useState(cargarProductosIniciales);
   const [categoriaActiva, setCategoriaActiva] = useState("Todos");
+  const [productoEditando, setProductoEditando] = useState(null);
+  const [mensaje, setMensaje] = useState("");
 
   useEffect(() => {
     localStorage.setItem("productos", JSON.stringify(productos));
   }, [productos]);
+
+  useEffect(() => {
+    if (mensaje) {
+      const timer = setTimeout(() => setMensaje(""), 2500);
+      return () => clearTimeout(timer);
+    }
+  }, [mensaje]);
 
   const categorias = ["Todos", ...new Set(productos.map((p) => p.categoria))];
 
@@ -39,10 +48,22 @@ function App() {
 
   const agregarProducto = (nuevoProducto) => {
     setProductos([...productos, nuevoProducto]);
+    setMensaje("Producto agregado correctamente.");
+  };
+
+  const actualizarProducto = (productoActualizado) => {
+    setProductos(
+      productos.map((producto) =>
+        producto.id === productoActualizado.id ? productoActualizado : producto
+      )
+    );
+    setProductoEditando(null);
+    setMensaje("Producto actualizado correctamente.");
   };
 
   const eliminarProducto = (id) => {
     setProductos(productos.filter((producto) => producto.id !== id));
+    setMensaje("Producto eliminado.");
   };
 
   const modificarStock = (id, cambio) => {
@@ -53,6 +74,10 @@ function App() {
           : producto
       )
     );
+  };
+
+  const editarProducto = (producto) => {
+    setProductoEditando(producto);
   };
 
   const productosAgotados = productos.filter((p) => p.stock === 0).length;
@@ -67,7 +92,13 @@ function App() {
         <h1>Catálogo Sena</h1>
       </div>
 
-      <FormularioProducto onAgregar={agregarProducto} />
+      {mensaje && <div className="mensaje-estado">{mensaje}</div>}
+
+      <FormularioProducto
+        onAgregar={agregarProducto}
+        onActualizar={actualizarProducto}
+        productoEditando={productoEditando}
+      />
 
       <div className="tablero">
         <p>Productos registrados: {productos.length}</p>
@@ -99,6 +130,7 @@ function App() {
             imagen={producto.imagen}
             onEliminar={eliminarProducto}
             onModificarStock={modificarStock}
+            onEditar={editarProducto}
           />
         ))}
       </section>
