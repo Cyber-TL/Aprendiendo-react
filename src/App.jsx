@@ -60,8 +60,10 @@ function App() {
   };
 
   const eliminarProducto = (id) => {
-    setProductos(productos.filter((producto) => producto.id !== id));
-    setMensaje("Producto eliminado.");
+    if (window.confirm("¿Estás seguro de eliminar este producto?")) {
+      setProductos(productos.filter((producto) => producto.id !== id));
+      setMensaje("Producto eliminado.");
+    }
   };
 
   const modificarStock = (id, cambio) => {
@@ -78,11 +80,23 @@ function App() {
     setProductoEditando(producto);
   };
 
+  const limpiarFiltros = () => {
+    setBusqueda("");
+    setFiltroEstado("Todos");
+    setOrden("");
+    setCategoriaActiva("Todos");
+    setMensaje("Filtros limpiados.");
+  };
+
   const productosAgotados = productos.filter((p) => p.stock === 0).length;
   const valorInventario = productos.reduce(
     (total, producto) => total + producto.precio * (producto.stock || 0),
     0
   );
+
+  const productoMasCostoso = productos.length > 0
+    ? productos.reduce((max, p) => p.precio > max.precio ? p : max)
+    : null;
 
   // 1. Filtrar por categoría
   let productosFiltrados =
@@ -136,6 +150,7 @@ function App() {
         <p>Productos registrados: {productos.length}</p>
         <p>Productos agotados: {productosAgotados}</p>
         <p>Valor total del inventario: ${valorInventario}</p>
+        <p>Producto más costoso: {productoMasCostoso ? productoMasCostoso.nombre : "N/A"}</p>
       </div>
 
       <div className="controles-consulta">
@@ -161,6 +176,10 @@ function App() {
           <option value="stock-asc">Stock menor a mayor</option>
           <option value="stock-desc">Stock mayor a menor</option>
         </select>
+
+        <button className="filtro-btn" onClick={limpiarFiltros}>
+          Limpiar filtros
+        </button>
       </div>
 
       <div className="filtros">
