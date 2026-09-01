@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Producto from "./components/Producto";
 import FormularioProducto from "./components/FormularioProducto";
 import "./App.css";
@@ -17,9 +17,18 @@ const productosIniciales = [
   { id: 5, nombre: "Sombra de ojos", descripcion: "Paleta de tonos neutros", precio: 22000, categoria: "Maquillaje", imagen: sombra, stock: 10 },
 ];
 
+function cargarProductosIniciales() {
+  const guardados = localStorage.getItem("productos");
+  return guardados ? JSON.parse(guardados) : productosIniciales;
+}
+
 function App() {
-  const [productos, setProductos] = useState(productosIniciales);
+  const [productos, setProductos] = useState(cargarProductosIniciales);
   const [categoriaActiva, setCategoriaActiva] = useState("Todos");
+
+  useEffect(() => {
+    localStorage.setItem("productos", JSON.stringify(productos));
+  }, [productos]);
 
   const categorias = ["Todos", ...new Set(productos.map((p) => p.categoria))];
 
