@@ -1,0 +1,12 @@
+[33me92da3f[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m feat: mejorar experiencia de usuario con confirmacion y filtros
+[33m4962704[m feat: agregar busqueda, flitros de estado y ordenamiento
+[33m003150e[m feat: agregar edicion de productos y mensajes de estado
+[33m8ec76c5[m feat: persistir inventario con localStorage
+[33m4b2adb9[m style: mejorar diseño del formulario, tablero e indicadores
+[33mc0e7965[m feat: actualizar funcionalidades del proyecto
+[33m94da007[m feat: convertir catalogo en gestor de inventario
+[33med455aa[m tienda completada: filtro por categoria y ajustes de diseño
+[33m08d3f70[m agregar categoria a los productos
+[33mda37a23[m agregar imagenes a los productos
+[33mf1e76df[m agregar componente Producto y estilos del catalogo
+[33m62bd01f[m crear proyecto React con Vite

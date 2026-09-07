@@ -1,6 +1,13 @@
+import { Routes, Route } from "react-router";
+import Navbar from "./components/Navbar";
+import Inicio from "./pages/inicio";
+import Inventario from "./pages/inventario";
+import NuevoProducto from "./pages/nuevoproducto";
+import DetalleProducto from "./pages/detalleproducto";
+import Acerca from "./pages/acerca";
+import NoEncontrado from "./pages/no_encontrado";
+
 import { useState, useEffect } from "react";
-import Producto from "./components/Producto";
-import FormularioProducto from "./components/FormularioProducto";
 import "./App.css";
 
 import labial from "./assets/labial.jpg";
@@ -94,31 +101,28 @@ function App() {
     0
   );
 
-  const productoMasCostoso = productos.length > 0
-    ? productos.reduce((max, p) => p.precio > max.precio ? p : max)
-    : null;
+  const productoMasCostoso =
+    productos.length > 0
+      ? productos.reduce((max, p) => (p.precio > max.precio ? p : max))
+      : null;
 
-  // 1. Filtrar por categoría
   let productosFiltrados =
     categoriaActiva === "Todos"
       ? productos
       : productos.filter((p) => p.categoria === categoriaActiva);
 
-  // 2. Filtrar por estado (disponible/agotado)
   if (filtroEstado === "Disponibles") {
     productosFiltrados = productosFiltrados.filter((p) => p.stock > 0);
   } else if (filtroEstado === "Agotados") {
     productosFiltrados = productosFiltrados.filter((p) => p.stock === 0);
   }
 
-  // 3. Buscar por nombre
   if (busqueda.trim() !== "") {
     productosFiltrados = productosFiltrados.filter((p) =>
       p.nombre.toLowerCase().includes(busqueda.toLowerCase())
     );
   }
 
-  // 4. Ordenar (sin mutar el estado original)
   const productosOrdenados = [...productosFiltrados];
   if (orden === "nombre-asc") {
     productosOrdenados.sort((a, b) => a.nombre.localeCompare(b.nombre));
@@ -133,88 +137,45 @@ function App() {
   }
 
   return (
-    <main className="app">
-      <div className="titulo-wrapper">
-        <h1>Catálogo Sena</h1>
-      </div>
-
-      {mensaje && <div className="mensaje-estado">{mensaje}</div>}
-
-      <FormularioProducto
-        onAgregar={agregarProducto}
-        onActualizar={actualizarProducto}
-        productoEditando={productoEditando}
-      />
-
-      <div className="tablero">
-        <p>Productos registrados: {productos.length}</p>
-        <p>Productos agotados: {productosAgotados}</p>
-        <p>Valor total del inventario: ${valorInventario}</p>
-        <p>Producto más costoso: {productoMasCostoso ? productoMasCostoso.nombre : "N/A"}</p>
-      </div>
-
-      <div className="controles-consulta">
-        <input
-          type="text"
-          className="busqueda"
-          placeholder="Buscar por nombre..."
-          value={busqueda}
-          onChange={(e) => setBusqueda(e.target.value)}
-        />
-
-        <select value={filtroEstado} onChange={(e) => setFiltroEstado(e.target.value)}>
-          <option value="Todos">Todos</option>
-          <option value="Disponibles">Disponibles</option>
-          <option value="Agotados">Agotados</option>
-        </select>
-
-        <select value={orden} onChange={(e) => setOrden(e.target.value)}>
-          <option value="">Ordenar por...</option>
-          <option value="nombre-asc">Nombre A-Z</option>
-          <option value="precio-asc">Precio menor a mayor</option>
-          <option value="precio-desc">Precio mayor a menor</option>
-          <option value="stock-asc">Stock menor a mayor</option>
-          <option value="stock-desc">Stock mayor a menor</option>
-        </select>
-
-        <button className="filtro-btn" onClick={limpiarFiltros}>
-          Limpiar filtros
-        </button>
-      </div>
-
-      <div className="filtros">
-        {categorias.map((cat) => (
-          <button
-            key={cat}
-            className={`filtro-btn ${categoriaActiva === cat ? "activo" : ""}`}
-            onClick={() => setCategoriaActiva(cat)}
-          >
-            {cat}
-          </button>
-        ))}
-      </div>
-
-      {productosOrdenados.length === 0 ? (
-        <p className="sin-resultados">No se encontraron productos.</p>
-      ) : (
-        <section className="catalogo">
-          {productosOrdenados.map((producto) => (
-            <Producto
-              key={producto.id}
-              producto={producto}
-              nombre={producto.nombre}
-              descripcion={producto.descripcion}
-              precio={producto.precio}
-              categoria={producto.categoria}
-              imagen={producto.imagen}
+    <>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Inicio />} />
+        <Route
+          path="/inventario"
+          element={
+            <Inventario
+              productos={productosOrdenados}
+              categorias={categorias}
+              categoriaActiva={categoriaActiva}
+              setCategoriaActiva={setCategoriaActiva}
+              mensaje={mensaje}
+              busqueda={busqueda}
+              setBusqueda={setBusqueda}
+              filtroEstado={filtroEstado}
+              setFiltroEstado={setFiltroEstado}
+              orden={orden}
+              setOrden={setOrden}
+              limpiarFiltros={limpiarFiltros}
+              productoEditando={productoEditando}
+              onAgregar={agregarProducto}
+              onActualizar={actualizarProducto}
               onEliminar={eliminarProducto}
               onModificarStock={modificarStock}
               onEditar={editarProducto}
+              totalProductos={productos.length}
+              productosAgotados={productosAgotados}
+              valorInventario={valorInventario}
+              productoMasCostoso={productoMasCostoso}
             />
-          ))}
-        </section>
-      )}
-    </main>
+          }
+        />
+        <Route path="/nuevo" element={<NuevoProducto onAgregar={agregarProducto} />} />
+        <Route path="/productos/:id" element={<DetalleProducto productos={productos} />} />
+        <Route path="/acerca" element={<Acerca />} />
+        <Route path="*" element={<NoEncontrado />} />
+      </Routes>
+    </>
   );
 }
 
