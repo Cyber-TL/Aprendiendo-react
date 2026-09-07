@@ -3,7 +3,11 @@ import { NavLink } from "react-router";
 export default function Producto({ producto, nombre, descripcion, precio, categoria, imagen, onEliminar, onModificarStock, onEditar }) {
   return (
     <article className="producto">
-      <img src={imagen} alt={nombre} />
+      {imagen ? (
+        <img src={imagen} alt={nombre} />
+      ) : (
+        <div className="sin-imagen">Sin imagen</div>
+      )}
       <span className="categoria">{categoria}</span>
       <h2>{nombre}</h2>
       <p>{descripcion}</p>

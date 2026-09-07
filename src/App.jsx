@@ -140,7 +140,16 @@ function App() {
     <>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Inicio />} />
+        <Route
+          path="/"
+          element={
+            <Inicio
+              totalProductos={productos.length}
+              unidadesDisponibles={productos.reduce((total, p) => total + (p.stock || 0), 0)}
+              productosStockBajo={productos.filter((p) => p.stock > 0 && p.stock <= 2).length}
+            />
+          }
+        />
         <Route
           path="/inventario"
           element={

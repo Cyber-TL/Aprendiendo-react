@@ -5,7 +5,8 @@ function FormularioProducto({ onAgregar, onActualizar, productoEditando }) {
         nombre: "",
         categoria: "",
         precio: "",
-        stock: ""
+        stock: "",
+        imagen: ""
     });
 
     useEffect(() => {
@@ -14,7 +15,8 @@ function FormularioProducto({ onAgregar, onActualizar, productoEditando }) {
                 nombre: productoEditando.nombre,
                 categoria: productoEditando.categoria,
                 precio: productoEditando.precio,
-                stock: productoEditando.stock
+                stock: productoEditando.stock,
+                imagen: productoEditando.imagen || ""
             });
         }
     }, [productoEditando]);
@@ -24,6 +26,20 @@ function FormularioProducto({ onAgregar, onActualizar, productoEditando }) {
             ...formulario,
             [evento.target.name]: evento.target.value
         });
+    };
+
+    const manejarImagen = (evento) => {
+        const archivo = evento.target.files[0];
+        if (!archivo) return;
+
+        const lector = new FileReader();
+        lector.onload = () => {
+            setFormulario((prev) => ({
+                ...prev,
+                imagen: lector.result // string base64
+            }));
+        };
+        lector.readAsDataURL(archivo);
     };
 
     const manejarEnvio = (evento) => {
@@ -45,7 +61,8 @@ function FormularioProducto({ onAgregar, onActualizar, productoEditando }) {
                 nombre: formulario.nombre,
                 categoria: formulario.categoria,
                 precio: Number(formulario.precio),
-                stock: Number(formulario.stock)
+                stock: Number(formulario.stock),
+                imagen: formulario.imagen
             });
         } else {
             onAgregar({
@@ -53,11 +70,12 @@ function FormularioProducto({ onAgregar, onActualizar, productoEditando }) {
                 nombre: formulario.nombre,
                 categoria: formulario.categoria,
                 precio: Number(formulario.precio),
-                stock: Number(formulario.stock)
+                stock: Number(formulario.stock),
+                imagen: formulario.imagen
             });
         }
 
-        setFormulario({ nombre: "", categoria: "", precio: "", stock: "" });
+        setFormulario({ nombre: "", categoria: "", precio: "", stock: "", imagen: "" });
     };
 
     return (
@@ -69,6 +87,15 @@ function FormularioProducto({ onAgregar, onActualizar, productoEditando }) {
                 <input type="number" name="precio" placeholder="Precio" value={formulario.precio} onChange={manejarCambio} />
                 <input type="number" name="stock" placeholder="Stock" value={formulario.stock} onChange={manejarCambio} />
             </div>
+
+            <div className="formulario-imagen">
+                <label htmlFor="imagen">Imagen del producto</label>
+                <input type="file" id="imagen" accept="image/*" onChange={manejarImagen} />
+                {formulario.imagen && (
+                    <img src={formulario.imagen} alt="Vista previa" className="preview-imagen" />
+                )}
+            </div>
+
             <button type="submit">{productoEditando ? "Guardar cambios" : "Agregar producto"}</button>
         </form>
     );
